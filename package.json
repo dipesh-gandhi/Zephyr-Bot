@@ -1,0 +1,21 @@
+{
+  "name": "zephyr",
+  "version": "1.0.0",
+  "description": "zephyr app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dipesh Gandhi",
+  "license": "ISC",
+  "dependencies": {
+    "botkit": "^0.4.2",
+    "botkit-sms": "^1.1.0",
+    "botkit-storage-mongo": "^1.0.4",
+    "config": "^1.24.0",
+    "engines": "^0.4.0",
+    "node-rest-client": "^2.0.1",
+    "sentiment": "^2.1.0",
+    "winston": "^2.3.0"
+  }
+}
