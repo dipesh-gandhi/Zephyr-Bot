@@ -1,5 +1,14 @@
+var config = require('config');
 
-var initBotController = function(bot, controller, luis, weather, sentiment){
+//Set LUIS
+var luis = require("../middleware/luis.js");
+//Set weather
+var weather = require("../middleware/weather.js");
+//Set Sentiment
+var sentiment = require('sentiment');
+
+
+var initBotController = function(bot, controller){
 
 /*
     controller.on('bot_channel_join', function(bot, message) {
@@ -9,13 +18,12 @@ var initBotController = function(bot, controller, luis, weather, sentiment){
 */
     controller.hears(['hello', 'hi'], 'message_received', function(bot, message) {
         controller.storage.users.get(message.user, function(err, user) {
+            var msg = 'You can ask me anything from booking a flight, checking flight status, or get weather for specific city';
             if (user && user.name) {
-                bot.reply(message, 'Hey ' + user.name + '!!');
+                bot.reply(message, 'Hey ' + user.name + '!! ' + msg);
             } else {
-                bot.reply(message, 'Hi there!');
+                bot.reply(message, 'Hi there! ' + msg);
             }
-
-            bot.reply(message, 'You can ask me anything from booking a flight, checking flight status, or get weather for specific city');
         });
     });
 
@@ -89,7 +97,7 @@ var initBotController = function(bot, controller, luis, weather, sentiment){
                                     }
                                     user.name = convo.extractResponse('nickname');
                                     controller.storage.users.save(user, function(err, id) {
-                                        bot.reply(message, 'Got it. I will call you ' + user.name + ' from now on.');
+                                        bot.reply(message, 'I will call you ' + user.name + ' from now on.');
                                     });
                                 });
 
@@ -319,7 +327,27 @@ var initBotController = function(bot, controller, luis, weather, sentiment){
 
       var msgSentiment = sentiment(message.text);
       console.log("Sentiment: " + JSON.stringify(msgSentiment));
-      bot.reply(message, "I have no idea what that means. Try again");
+      var chosen_message = '';
+      if(msgSentiment.score < 0){
+              var neg_msgs = [
+                      "Whoah, be nice to me",
+                      "You can suck it",
+                      "Screw you!"
+                    ]
+              var random_index = Math.floor(Math.random() * neg_msgs.length)
+              chosen_message = neg_msgs[random_index];
+      }else{
+              var pos_msgs = [
+                      "You're my friend!",
+                      "Thanks!",
+                      "Nice of you!"
+                    ]
+              var random_index = Math.floor(Math.random() * pos_msgs.length)
+              chosen_message = pos_msgs[random_index];
+      }
+
+      console.log("Msg: " + chosen_message);
+      bot.reply(message, chosen_message);
 
     });
 /*

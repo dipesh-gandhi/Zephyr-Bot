@@ -2,20 +2,9 @@ var config = require('config');
 var Botkit = require('../node_modules/botkit/lib/Botkit.js');
 const botController = require('./controller.js');
 
-
 //Set Mongo
 var mongoStorage = require('botkit-storage-mongo')({mongoUri: config.Mongo.mongoUri});
 console.log("--> Using Mongo " + config.Mongo.mongoUri);
-
-//Set LUIS
-var luis = require("../middleware/luis.js");
-
-//Set weather
-var weather = require("../middleware/weather.js");
-
-//Set Sentiment
-var sentiment = require('sentiment');
-
 
 var getBot = function(){
 
@@ -25,7 +14,7 @@ var getBot = function(){
   });
 
   var bot = controller.spawn();
-  botController.initBotController(bot, controller, luis, weather, sentiment);
+  botController.initBotController(bot, controller);
 
 }
 
@@ -47,7 +36,7 @@ var getTwilioBot = function(){
   	})
   })
 
-  botController.initBotController(bot, controller, luis, weather, sentiment);
+  botController.initBotController(bot, controller);
 
 }
 
